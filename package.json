@@ -1,6 +1,26 @@
 {
-  "dependencies": {
-    "@types/mermaid": "^9.1.0",
-    "mermaid": "^11.8.1"
+  "name": "codelore",
+  "version": "1.0.0",
+  "description": "Repository Analysis & Storytelling Tool",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd codelore-backend && python main.py",
+    "dev:frontend": "cd codelore-frontend && npm start",
+    "install:all": "npm install && cd codelore-frontend && npm install",
+    "build": "cd codelore-frontend && npm run build",
+    "start": "npm run dev"
+  },
+  "keywords": [
+    "repository-analysis",
+    "code-visualization",
+    "git-analysis",
+    "architecture-diagrams",
+    "developer-tools"
+  ],
+  "author": "CodeLore Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }

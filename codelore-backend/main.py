@@ -27,6 +27,79 @@ app.add_middleware(
 def hello():
     return {"message": "CodeLore backend live"}
 
+@app.get("/api/project/summary")
+def get_dashboard_data(url: str = Query(..., description="GitHub repo URL")):
+    """
+    Unified endpoint that provides all data needed for the dashboard.
+    Returns project summary, file roles, commit history, and architecture diagram.
+    """
+    try:
+        # Clone repo and get basic data
+        path = clone_repo(url)
+        commits = get_commit_summary(path)
+        owner, repo = extract_repo_owner_name(url)
+        
+        # Get project summary
+        summary_data = extract_project_summary(path)
+        summary_text = generate_project_summary_text(summary_data)
+        
+        # Get dependency graph and architecture
+        connections = build_dependency_graph(path)
+        mermaid_diagram = generate_mermaid_diagram(connections)
+        
+        # Get file evolution for commit history
+        file_evolution = build_file_evolution(owner, repo, commits[:30], None)  # Limit for performance
+        
+        # Build comprehensive file data
+        files = []
+        for file_path in connections["dependencies"].keys():
+            full_path = os.path.join(path, file_path)
+            if os.path.exists(full_path):
+                # Get file role
+                file_history = file_evolution.get(file_path, [])
+                role_data = analyze_file_role(full_path, file_history)
+                
+                # Get file connections
+                file_connections = []
+                if file_path in connections["dependencies"]:
+                    for dep in connections["dependencies"][file_path]:
+                        if dep in connections["file_map"]:
+                            file_connections.append(connections["file_map"][dep]["name"])
+                
+                # Format commit history
+                formatted_history = []
+                for commit in file_history[:10]:  # Limit to 10 most recent
+                    formatted_history.append({
+                        "hash": commit.get("hash", ""),
+                        "date": commit.get("date", ""),
+                        "message": commit.get("message", ""),
+                        "changes": commit.get("changes", "")
+                    })
+                
+                # Create file object
+                file_obj = {
+                    "name": os.path.basename(file_path),
+                    "path": file_path,
+                    "role": role_data.get("role", "Unknown"),
+                    "connections": file_connections,
+                    "commitHistory": formatted_history,
+                    "summary": role_data.get("summary", "No summary available")
+                }
+                files.append(file_obj)
+        
+        return {
+            "summary": summary_text,
+            "files": files,
+            "architecture": mermaid_diagram,
+            "stats": {
+                "total_files": len(files),
+                "total_commits": len(commits),
+                "total_connections": len(connections["imports"])
+            }
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
 @app.get("/analyze")
 def analyze_repo(url: str = Query(..., description="GitHub repo URL")):
     try:
