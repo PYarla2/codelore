@@ -1,218 +1,95 @@
-# CodeLore 🚀
+# CodeLore
 
-**Repository Analysis & Storytelling Tool**
-
-CodeLore is an intelligent developer tool that analyzes GitHub repositories to generate interactive storybooks explaining repo evolution, architecture, and logic. It provides deep insights into how codebases evolve over time and how different components interact.
-
-## ✨ Features
-
-### 📊 **File Evolution Timeline**
-- Track how files change over time with commit-level details
-- Visualize file lifecycle and development patterns
-- Understand which files are most actively maintained
-
-### 🏗️ **Architecture Visualization**
-- Interactive Mermaid.js dependency graphs
-- File relationship mapping and connection analysis
-- Visual representation of project structure
-
-### 🎯 **Intelligent File Role Analysis**
-- AI-powered file purpose detection
-- Automatic categorization (UI, API, Auth, Utils, etc.)
-- Smart summaries of each file's function
-
-### 📝 **Project Summary Generation**
-- AI-generated project overviews
-- Key features and technology stack identification
-- Exportable project documentation
-
-### 🔍 **Advanced Search & Filtering**
-- Search by filename or path
-- Filter by file roles and types
-- Real-time filtering and sorting
-
-## 🛠️ Tech Stack
-
-### Backend
-- **Python 3.8+** with FastAPI
-- **GitPython** for repository analysis
-- **OpenAI GPT-4** for intelligent summarization
-- **Mermaid.js** for diagram generation
-
-### Frontend
-- **React 18** with TypeScript
-- **Tailwind CSS** for styling
-- **Mermaid.js** for interactive diagrams
-- **Modern React Hooks** for state management
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.8+
-- Node.js 16+
-- Git
-
-### Backend Setup
-```bash
-cd codelore-backend
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up environment variables
-export OPENAI_API_KEY="your-openai-api-key"  # Required for AI features
-
-# Start the backend server
-python main.py
-```
-
-The backend will be available at `http://localhost:8000`
-
-### Frontend Setup
-```bash
-cd codelore-frontend
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm start
-```
-
-The frontend will be available at `http://localhost:3000`
-
-## 📖 Usage
-
-1. **Open CodeLore** in your browser at `http://localhost:3000`
-2. **Enter a GitHub repository URL** (e.g., `https://github.com/username/repository`)
-3. **Click "Analyze Repository"** and wait for the analysis to complete
-4. **Explore the results**:
-   - **Timeline**: See file evolution over time
-   - **Architecture**: View dependency graphs and file relationships
-   - **File Details**: Click on any file for detailed analysis
-   - **Search & Filter**: Use the sidebar to find specific files or roles
-
-## 🔧 API Endpoints
-
-### Core Endpoints
-- `GET /api/project/summary?url={repo_url}` - Get complete project analysis
-- `GET /project-summary?url={repo_url}` - Get project summary only
-- `GET /file-roles?url={repo_url}` - Get file role analysis
-- `GET /dependencies?url={repo_url}` - Get dependency graph
-- `GET /evolution?url={repo_url}` - Get file evolution data
-
-### Analysis Endpoints
-- `GET /architecture?url={repo_url}` - Get architecture overview
-- `GET /file-history?url={repo_url}&filename={file}` - Get specific file history
-
-## 📁 Project Structure
-
-```
-codelore/
-├── codelore-backend/          # Python FastAPI backend
-│   ├── main.py               # Main application entry point
-│   ├── services/             # Analysis services
-│   │   ├── git_cloner.py     # Repository cloning
-│   │   ├── commit_parser.py  # Git commit analysis
-│   │   ├── file_analyzer.py  # File role detection
-│   │   ├── dependency_analyzer.py # Dependency mapping
-│   │   └── project_analyzer.py # Project summarization
-│   └── requirements.txt      # Python dependencies
-├── codelore-frontend/        # React TypeScript frontend
-│   ├── src/
-│   │   ├── components/       # React components
-│   │   │   ├── DashboardPage.tsx      # Main dashboard
-│   │   │   ├── FileListSidebar.tsx    # File navigation
-│   │   │   ├── ArchitectureGraph.tsx  # Mermaid diagrams
-│   │   │   ├── FileDetailView.tsx     # File details
-│   │   │   └── SearchAndFilters.tsx   # Search functionality
-│   │   └── App.tsx           # Main app component
-│   └── package.json          # Node.js dependencies
-└── README.md                 # This file
-```
-
-## 🎯 Use Cases
-
-### For Developers
-- **Onboarding**: Quickly understand new codebases
-- **Code Review**: Identify architectural patterns and dependencies
-- **Refactoring**: Visualize file relationships before making changes
-- **Documentation**: Generate project overviews automatically
-
-### For Teams
-- **Knowledge Sharing**: Create visual documentation of project structure
-- **Architecture Reviews**: Present dependency graphs and file relationships
-- **Project Planning**: Understand codebase evolution patterns
-
-### For Open Source
-- **Repository Analysis**: Evaluate project health and activity
-- **Contribution Planning**: Identify areas needing attention
-- **Documentation**: Generate README files and project summaries
-
-## 🔍 How It Works
-
-1. **Repository Cloning**: Downloads the target repository locally
-2. **Git Analysis**: Extracts commit history and file evolution data
-3. **Code Parsing**: Analyzes file contents and dependencies
-4. **AI Summarization**: Uses GPT-4 to generate intelligent summaries
-5. **Visualization**: Creates interactive diagrams and timelines
-6. **Data Integration**: Combines all analysis into a unified dashboard
-
-## 🚀 Deployment
-
-### Backend Deployment
-```bash
-# Using Docker
-docker build -t codelore-backend ./codelore-backend
-docker run -p 8000:8000 codelore-backend
-
-# Using Python directly
-cd codelore-backend
-pip install -r requirements.txt
-python main.py
-```
-
-### Frontend Deployment
-```bash
-# Build for production
-cd codelore-frontend
-npm run build
-
-# Deploy to Vercel/Netlify
-# The build folder can be deployed to any static hosting service
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **OpenAI** for GPT-4 API access
-- **Mermaid.js** for diagram generation
-- **FastAPI** for the backend framework
-- **React** and **Tailwind CSS** for the frontend
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](https://github.com/yourusername/codelore/issues) page
-2. Create a new issue with detailed information
-3. Include repository URL and error messages if applicable
+Welcome to CodeLore! This is a tool I built to help myself (and hopefully you) make sense of big, messy, or unfamiliar GitHub repositories. It analyzes a repo and gives you a visual, interactive story of how the codebase evolved, what each file does, and how everything fits together.
 
 ---
 
-**Made with ❤️ for the developer community**
+## Why CodeLore?
+
+I was tired of joining new projects and spending hours (or days) just figuring out what files mattered, what changed when, and how the pieces connected. So I made CodeLore to automate that detective work. It’s especially handy for open source, onboarding, or refactoring.
+
+---
+
+## What It Does
+
+- **Project Summary:** Pulls together a high-level summary from the README, package.json, and commit history. You get a quick sense of what the repo is about.
+- **File Timeline:** Tracks every file’s changes over time—who changed what, when, and why. You can see which files are stable and which are a hot mess.
+- **File Roles:** Tries to guess what each file is for (API, UI, model, config, etc.) based on its name, folder, and code. Not perfect, but surprisingly useful.
+- **Dependency Graph:** Maps out which files depend on which, and draws it as a graph (using Mermaid.js). Great for spotting tangled code or key modules.
+- **File Details:** Click any file to see its summary, history, connections, and more.
+- **Search & Filter:** Quickly find files by name or role. No more endless scrolling.
+- **Export:** Download a Markdown summary of the project and files for sharing or docs.
+
+---
+
+## How to Use It
+
+1. **Clone this repo and install dependencies:**
+
+   ```bash
+   git clone <your-fork-or-this-repo>
+   cd codelore-backend
+   python -m venv venv
+   venv\Scripts\activate  # On Windows
+   # or: source venv/bin/activate  # On Mac/Linux
+   pip install -r requirements.txt
+   cd ../codelore-frontend
+   npm install
+   ```
+
+2. **Set your OpenAI API key (for summaries):**
+   - On Windows (CMD):
+     ```
+     set OPENAI_API_KEY=your-openai-api-key
+     ```
+   - On Mac/Linux:
+     ```
+     export OPENAI_API_KEY=your-openai-api-key
+     ```
+
+3. **Start the backend:**
+   ```bash
+   cd codelore-backend
+   python main.py
+   # or for auto-reload:
+   uvicorn main:app --reload
+   ```
+
+4. **Start the frontend:**
+   ```bash
+   cd codelore-frontend
+   npm start
+   ```
+
+5. **Open your browser to [http://localhost:3000](http://localhost:3000)**
+
+6. **Paste in a GitHub repo URL and hit Analyze.**
+
+---
+
+## Real-World Tips
+
+- Works best on public repos. For private ones, you’ll need to add a GitHub token (not yet in the UI, but you can hack it in the backend).
+- If you see “No files found,” try setting the filter to “All” or check the backend logs for errors.
+- The dependency graph can get wild on huge repos—try zooming or filtering.
+- Summaries are as good as the code and commit messages. Garbage in, garbage out!
+- If you break something, just delete the `cloned_repos` folder and try again.
+
+---
+
+## Tech Stack (because you’ll ask)
+
+- **Backend:** Python, FastAPI, GitPython, OpenAI (for summaries), Mermaid.js (for diagrams)
+- **Frontend:** React, TypeScript, Tailwind CSS, Mermaid.js
+
+---
+
+## Contributing
+
+PRs welcome! If you have ideas, bug reports, or want to make it prettier, open an issue or send a pull request. I built this for myself but would love to see it help others.
+
+---
+
+## License
+
+MIT. Use it, fork it, break it, fix it. Just don’t blame me if it tells you your code is a mess. 😉
