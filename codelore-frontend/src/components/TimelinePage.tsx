@@ -50,6 +50,30 @@ export default function TimelinePage({ repoUrl }: Props) {
     }
   }, [repoUrl]);
 
+  // Transform data to match FileTimeline component interface
+  const transformDataForFileTimeline = () => {
+    if (!data) return [];
+    
+    return Object.entries(data.file_evolution).map(([filename, history]) => ({
+      name: filename.split('/').pop() || filename,
+      path: filename,
+      role: "File", // Default role since we don't have role data in this endpoint
+      connections: [], // No connection data in this endpoint
+      commitHistory: history.map(commit => ({
+        hash: commit.commit_sha,
+        date: commit.timestamp,
+        message: commit.summary,
+        changes: `${commit.change_type} (+${commit.additions}, -${commit.deletions})`
+      })),
+      summary: `File with ${history.length} commits, ${data.lifecycle_stats[filename]?.total_additions || 0} additions, ${data.lifecycle_stats[filename]?.total_deletions || 0} deletions`
+    }));
+  };
+
+  const handleFileSelect = (file: any) => {
+    // Handle file selection - could open a modal or navigate to details
+    console.log('Selected file:', file);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
@@ -112,16 +136,10 @@ export default function TimelinePage({ repoUrl }: Props) {
               </p>
             </div>
 
-            <div className="space-y-6">
-              {Object.entries(data.file_evolution).map(([filename, history]) => (
-                <FileTimeline
-                  key={filename}
-                  filename={filename}
-                  history={history}
-                  stats={data.lifecycle_stats[filename]}
-                />
-              ))}
-            </div>
+            <FileTimeline
+              files={transformDataForFileTimeline()}
+              onFileSelect={handleFileSelect}
+            />
           </div>
         )}
 

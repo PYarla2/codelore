@@ -115,10 +115,16 @@ const FileListSidebar: React.FC<FileListSidebarProps> = ({
                       </div>
                     </div>
                   )}
-                  {file.commitHistory.length > 0 && (
+                  {(
+                    file.commitHistory.length > 0 || true // Always show the line, fallback if empty
+                  ) && (
                     <div className="mt-2">
                       <p className="text-xs text-gray-500">
-                        Last updated: {new Date(file.commitHistory[0].date).toLocaleDateString()}
+                        Last updated: {
+                          file.commitHistory[0]?.date && !isNaN(new Date(file.commitHistory[0].date).getTime())
+                            ? new Date(file.commitHistory[0].date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+                            : 'Never updated'
+                        }
                       </p>
                     </div>
                   )}

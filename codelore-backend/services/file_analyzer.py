@@ -35,6 +35,14 @@ def analyze_file_role(file_path: str, file_history: List[Dict] = None) -> Dict:
         except:
             pass
     
+    # Generate a summary for the file
+    if role_data["role"] and role_data["role"] != "Contains application logic and functionality":
+        summary = f"{filename} – {role_data['role']}"
+    elif role_data["category"]:
+        summary = f"{filename} – {role_data['category']}"
+    else:
+        summary = f"{filename} – Source code file"
+    role_data["summary"] = summary
     return role_data
 
 def categorize_file(file_path: str, file_ext: str, dir_path: str) -> str:
@@ -90,43 +98,61 @@ def determine_file_role(filename: str, dir_path: str, file_history: List[Dict] =
     """
     filename_lower = filename.lower()
     dir_path_lower = dir_path.lower()
-    
+
+    # Machine Learning/Model related
+    if any(term in filename_lower for term in ['gnn', 'model', 'ml', 'nn', 'cnn', 'rnn', 'lstm', 'bert', 'transformer']):
+        return "Implements machine learning or neural network model"
+    if 'train' in filename_lower:
+        return "Training script for machine learning models"
+    if 'predict' in filename_lower or 'inference' in filename_lower:
+        return "Performs prediction or inference using models"
+    if 'data' in filename_lower or 'dataset' in filename_lower:
+        return "Processes or loads datasets"
+    if 'graph' in filename_lower:
+        return "Processes graph structures or graph data"
+    if 'utils' in filename_lower or 'helper' in filename_lower:
+        return "Provides utility functions and helpers"
+    if 'config' in filename_lower or filename_lower.endswith('.yaml') or filename_lower.endswith('.yml') or filename_lower.endswith('.json'):
+        return "Configuration file for project settings"
+    if filename_lower in ['main.py', 'app.py', 'run.py']:
+        return "Runs the main application or server"
+    if filename_lower.endswith('.sh') or filename_lower.endswith('.bat'):
+        return "Shell or batch script for automation"
+    if filename_lower.endswith('.md'):
+        return "Documentation file"
+    if filename_lower.endswith('.ipynb'):
+        return "Jupyter notebook for experiments or analysis"
+    if filename_lower.endswith('.test.py') or filename_lower.startswith('test_'):
+        return "Test file for validating code functionality"
+
     # Authentication related
     if any(auth_term in filename_lower for auth_term in ['auth', 'login', 'register', 'jwt', 'token']):
         return "Handles user authentication and authorization"
-    
     # Database related
-    if any(db_term in filename_lower for db_term in ['model', 'schema', 'database', 'db', 'orm']):
+    if any(db_term in filename_lower for db_term in ['schema', 'database', 'db', 'orm']):
         return "Defines data models and database schema"
-    
     # API related
     if any(api_term in filename_lower for api_term in ['api', 'route', 'endpoint', 'controller']):
         return "Exposes API endpoints and handles requests"
-    
     # UI Components
     if any(ui_term in filename_lower for ui_term in ['button', 'form', 'modal', 'card', 'header', 'footer']):
         return "Renders UI component for user interaction"
-    
     # Configuration
-    if any(config_term in filename_lower for config_term in ['config', 'settings', 'env']):
+    if any(config_term in filename_lower for config_term in ['settings', 'env']):
         return "Manages application configuration and settings"
-    
     # Utilities
-    if any(util_term in filename_lower for util_term in ['util', 'helper', 'common', 'shared']):
+    if any(util_term in filename_lower for util_term in ['common', 'shared']):
         return "Provides utility functions and shared logic"
-    
     # State management
     if any(state_term in filename_lower for state_term in ['store', 'state', 'redux', 'context']):
         return "Manages application state and data flow"
-    
     # Testing
     if any(test_term in filename_lower for test_term in ['test', 'spec']):
         return "Contains tests for application functionality"
-    
     # Documentation
     if any(doc_term in filename_lower for doc_term in ['readme', 'docs', 'guide']):
         return "Provides documentation and usage instructions"
-    
+
     # Check directory-based patterns
     if 'auth' in dir_path_lower:
         return "Handles authentication and user management"
@@ -140,7 +166,7 @@ def determine_file_role(filename: str, dir_path: str, file_history: List[Dict] =
         return "Contains business logic and external service integrations"
     elif 'utils' in dir_path_lower:
         return "Provides utility functions and helpers"
-    
+
     # Check commit history for clues
     if file_history:
         first_commit = file_history[0] if file_history else None
@@ -152,7 +178,7 @@ def determine_file_role(filename: str, dir_path: str, file_history: List[Dict] =
                 return "Exposes API functionality"
             elif any(term in commit_msg for term in ['add component', 'ui', 'interface']):
                 return "Renders user interface elements"
-    
+
     # Default based on category
     return "Contains application logic and functionality"
 

@@ -75,13 +75,20 @@ const FileDetailView: React.FC<FileDetailViewProps> = ({ file }) => {
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-gray-900">{file.name}</h1>
               <p className="text-gray-600 mt-1">{file.path}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Last updated: {
+                  file.commitHistory[0]?.date && !isNaN(new Date(file.commitHistory[0].date).getTime())
+                    ? new Date(file.commitHistory[0].date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+                    : 'Never updated'
+                }
+              </p>
             </div>
             <div className="flex items-center space-x-3">
               <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getRoleColor(file.role)}`}>
-                {file.role}
+                {file.role || 'Role unknown'}
               </span>
               <button
-                onClick={() => copyToClipboard(`${file.name}\nRole: ${file.role}\nPath: ${file.path}\nSummary: ${file.summary}`)}
+                onClick={() => copyToClipboard(`${file.name}\nRole: ${file.role || 'Role unknown'}\nPath: ${file.path}\nSummary: ${file.summary || 'No summary available'}`)}
                 className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
               >
                 Copy Details
@@ -133,7 +140,7 @@ const FileDetailView: React.FC<FileDetailViewProps> = ({ file }) => {
               <h3 className="text-lg font-medium text-gray-900 mb-4">File Summary</h3>
               <div className="prose prose-sm max-w-none">
                 <p className="text-gray-700 leading-relaxed mb-6">
-                  {file.summary}
+                  {file.summary || 'No summary available'}
                 </p>
               </div>
               
@@ -147,7 +154,7 @@ const FileDetailView: React.FC<FileDetailViewProps> = ({ file }) => {
                     </div>
                     <div>
                       <dt className="text-sm text-gray-500">Role</dt>
-                      <dd className="text-sm text-gray-900">{file.role}</dd>
+                      <dd className="text-sm text-gray-900">{file.role || 'Role unknown'}</dd>
                     </div>
                     <div>
                       <dt className="text-sm text-gray-500">Total Commits</dt>
@@ -166,15 +173,17 @@ const FileDetailView: React.FC<FileDetailViewProps> = ({ file }) => {
                     <div className="space-y-3">
                       {file.commitHistory.slice(0, 3).map((commit, index) => (
                         <div key={index} className="border-l-2 border-gray-200 pl-3">
-                          <p className="text-sm text-gray-900 font-medium">{commit.message}</p>
+                          <p className="text-sm font-medium text-gray-900">{commit.message || 'No commit message'}</p>
                           <p className="text-xs text-gray-500">
-                            {new Date(commit.date).toLocaleDateString()} • {commit.hash.substring(0, 8)}
+                            {commit.date && !isNaN(new Date(commit.date).getTime())
+                              ? new Date(commit.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+                              : 'Unknown date'} • {commit.hash ? commit.hash.substring(0, 8) : 'No hash'}
                           </p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-gray-500">No commit history available</p>
+                    <p className="text-sm text-gray-500">No recent changes</p>
                   )}
                 </div>
               </div>
